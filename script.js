@@ -1,71 +1,49 @@
-const studentForm = document.getElementById('studentForm');
-const studentList = document.getElementById('studentList');
+document.addEventListener("DOMContentLoaded", () => {
+  const studentForm = document.getElementById("studentForm");
+  const studentList = document.getElementById("studentList");
 
-const API_URL = 'http://localhost:3000/students';
+  studentForm.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-async function fetchStudents() {
-  const res = await fetch(API_URL);
-  const students = await res.json();
-  renderStudents(students);
-}
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const ageInput = document.getElementById("age");
 
-function renderStudents(students) {
-  studentList.innerHTML = '';
-  if (students.length === 0) {
-    studentList.innerHTML = '<tr><td colspan="4" style="text-align:center;">No students added.</td></tr>';
-    return;
-  }
-  students.forEach((student) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${student.name}</td>
-      <td>${student.email}</td>
-      <td>${student.age}</td>
-      <td><button class="delete-btn" data-id="${student.id}">Delete</button></td>
-    `;
-    studentList.appendChild(tr);
-  });
-}
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const age = ageInput.value.trim();
 
-studentForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const age = parseInt(document.getElementById('age').value);
-
-  if (!name || !email || !age || age < 1) {
-    alert('Please enter valid details.');
-    return;
-  }
-
-  try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, age })
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      alert(data.error || 'Failed to add student');
+    if (name === "" || email === "" || age === "") {
+      alert("Please fill in all fields.");
       return;
     }
 
-    studentForm.reset();
-    fetchStudents();
-  } catch (err) {
-    alert('Error: ' + err.message);
-  }
-});
+    const row = document.createElement("tr");
 
-studentList.addEventListener('click', async (e) => {
-  if (e.target.classList.contains('delete-btn')) {
-    const id = e.target.getAttribute('data-id');
-    await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-    fetchStudents();
-  }
-});
+    row.innerHTML = `
+      <td>${name}</td>
+      <td>${email}</td>
+      <td>${age}</td>
+      <td><button class="delete-btn">Delete</button></td>
+    `;
 
-fetchStudents();
+    studentList.appendChild(row);
+
+    // Clear inputs
+    nameInput.value = "";
+    emailInput.value = "";
+    ageInput.value = "";
+
+    nameInput.focus();
+  });
+
+  // Handle delete
+  studentList.addEventListener("click", function (e) {
+    if (e.target.classList.contains("delete-btn")) {
+      const row = e.target.closest("tr");
+      if (confirm("Are you sure you want to delete this student?")) {
+        row.remove();
+      }
+    }
+  });
+});
