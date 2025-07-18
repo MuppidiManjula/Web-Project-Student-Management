@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Management</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="welcome.css" />
+</head>
+<body>
+
+  <div id="welcomeScreen">
+  <h1>Welcome to Student Management</h1>
+  <button onclick="enterManagement()">Enter</button>
+</div>
+
+
+  <!-- Student Management Content -->
+  <div id="managementContent" style="display:none;">
+    <h1>Student Management</h1>
+    <form id="studentForm">
+      <input type="text" id="name" placeholder="Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="number" id="age" placeholder="Age" required min="1" />
+      <button type="submit">Add Student</button>
+    </form>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th><th>Email</th><th>Age</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="studentList"></tbody>
+    </table>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    function enterManagement() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('managementContent').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
